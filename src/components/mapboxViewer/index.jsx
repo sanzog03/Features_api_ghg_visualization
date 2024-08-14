@@ -31,8 +31,9 @@ export class MapBoxViewer extends Component {
         const map = new mapboxgl.Map({
             container: 'mapbox-container',
             style: mapboxStyleUrl,
-            center: [-94.676392, 39.106667], // Center of the USA
-            zoom: 4.8 // Adjust zoom level to fit the USA
+            center: [-98.585522, 1.8333333], // Centered on the US
+            zoom: 2,
+            projection: 'equirectangular'
         });
         this.setState({currentViewer: map});
         
