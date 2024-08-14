@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import { MapBoxViewer } from '../mapboxViewer';
 import { Title } from '../title';
+import { ConcentrationChart } from '../chart';
 
 export function Dashboard() {
   const [ selectedStation, setSelectedStation ] = useState("");
@@ -15,7 +16,7 @@ export function Dashboard() {
     <Box className="fullSize">
         <Title selection={selectedStation}/>
         <MapBoxViewer stations={NISTStations} setSelection={setSelectedStation}/>
-        {/* <Chart selectedStation={selectedStation}/> */}
+        <ConcentrationChart selectedStation={selectedStation}/>
     </Box>
   );
 }

@@ -79,9 +79,9 @@ export class MapBoxViewer extends Component {
 
     render() {
         return (
-            <Box component="main" className="map-section">
+            <Box component="main" className="map-section fullSize" sx={{ flexGrow: 1 }}>
                 <Grid container className="fullSize">
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sx={{ position: "relative" }}>
                         <div id="mapbox-container" className='fullSize' style={{ position: "absolute" }}></div>
                         {/* <div id="mapbox-container" className='fullSize' style={{ position: "relative", width: "auto", height: "1024px" }}></div> */}
                     </Grid>
