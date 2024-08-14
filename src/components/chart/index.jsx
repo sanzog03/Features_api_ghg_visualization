@@ -22,8 +22,8 @@ export class ConcentrationChart extends Component {
     if (this.props.selectedStationId !== prevProps.selectedStationId) {
       // fetch the data from the api and then initialize the chart.
       this.fetchStationData(this.props.selectedStationId).then(data => {
-        const { time, concentration, title } = data;
-        this.updateChart(concentration, time);
+        const { time, concentration, stationName } = data;
+        this.updateChart(concentration, time, stationName);
       });
     }
   }
@@ -34,8 +34,8 @@ export class ConcentrationChart extends Component {
     }
     // fetch the data from the api and then initialize the chart.
     this.fetchStationData(this.props.selectedStationId).then(data => {
-      const { time, concentration, title } = data;
-      this.initializeChart(this.chartCanvas, concentration, time);
+      const { time, concentration, stationName } = data;
+      this.initializeChart(this.chartCanvas, concentration, time, stationName);
     });
   }
 
@@ -48,8 +48,9 @@ export class ConcentrationChart extends Component {
       }
       const result = await response.json();
       const { title, features } = result;
+      const stationName = this.getStationName(title);
       const { time, concentration } = this.dataPreprocess(features);
-      return { time, concentration, title };
+      return { time, concentration, stationName };
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -67,7 +68,7 @@ export class ConcentrationChart extends Component {
     return {time, concentration};
   }
 
-  initializeChart(chartDOMRef, data=[], labels=[]) {
+  initializeChart(chartDOMRef, data=[], labels=[], stationName="") {
     let dataset = {
       labels: labels,
       datasets: [
@@ -87,17 +88,35 @@ export class ConcentrationChart extends Component {
       options: options,
       plugins: [plugin]
     });
+
+    if (stationName) {
+      this.chart.options.plugins.title.text = ` NIST CO2 (${stationName})`;
+    } else {
+      this.chart.options.plugins.title.text = ` NIST CO2`;
+    }
   }
 
-  updateChart(data, label) {
+  updateChart(data, label, stationName) {
     if (this.chart) {
       // update that value in the chart.
       this.chart.data.labels = label;
       this.chart.data.datasets[0].data = data;
+      if (stationName) {
+        this.chart.options.plugins.title.text = ` NIST CO2 (${stationName})`;
+      } else {
+        this.chart.options.plugins.title.text = ` NIST CO2`;
+      }
 
       // update the chart
       this.chart.update();
     }
+  }
+
+  getStationName(title) {
+    let titleParts = title.split("_");
+    let stationName = titleParts[titleParts.length - 2];
+    let ghg = titleParts[titleParts.length - 1];
+    return stationName.toUpperCase();
   }
 
   render() {
