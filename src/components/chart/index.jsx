@@ -20,7 +20,11 @@ export class ConcentrationChart extends Component {
   componentDidUpdate(prevProps, prevState) {
     // when new props is received, initialize the chart with data.
     if (this.props.selectedStationId !== prevProps.selectedStationId) {
-      this.populateChart();
+      // fetch the data from the api and then initialize the chart.
+      this.fetchStationData(this.props.selectedStationId).then(data => {
+        const { time, concentration, title } = data;
+        this.updateChart(concentration, time);
+      });
     }
   }
 
@@ -85,14 +89,14 @@ export class ConcentrationChart extends Component {
     });
   }
 
-  updateChart(label, data) {
+  updateChart(data, label) {
     if (this.chart) {
       // update that value in the chart.
-      this.chart.data.labels.push(label);
-      this.chart.data.datasets[0].data.push(data);
+      this.chart.data.labels = label;
+      this.chart.data.datasets[0].data = data;
 
       // update the chart
-      this.chart.update('none');
+      this.chart.update();
     }
   }
 
