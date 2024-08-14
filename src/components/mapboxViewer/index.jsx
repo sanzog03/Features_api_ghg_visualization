@@ -16,8 +16,7 @@ export class MapBoxViewer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentViewer: null,
-            selectedStation: null
+            currentViewer: null
         }
     }
 
@@ -38,21 +37,25 @@ export class MapBoxViewer extends Component {
         this.setState({currentViewer: map});
         
         // show the whole map of usa and show all the NIST stations
-        // this.plotStations(map, this.props.stations);
+        this.plotStations(map, this.props.stations);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // on page refresh, show the whole map of usa and show all the NIST stations
+        this.plotStations(this.state.currentViewer, this.props.stations);
     }
 
     plotStations = (map, stations) => {
         stations.forEach(station => {
-            const { name, center, geojson } = station;
-            const [lon,  lat] = center;
+            const { id, title: name, location } = station;
+            const [lon,  lat] = location;
             const el = document.createElement('div');
             el.className = 'marker';
             
             let marker = this.addMarker(map, el, name, lon, lat);
 
             marker.getElement().addEventListener('click', () => {
-                this.setState({selectedStation: name});
-                this.props.setSelection(name);
+                this.props.setSelection(id);
             });
         });
     }

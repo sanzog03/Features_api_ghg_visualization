@@ -4,3 +4,8 @@
     align-items: center;
     height: 100%;
 }
+
+#chart-box {
+    position: absolute;
+    width: 100%;
+}
