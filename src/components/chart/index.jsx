@@ -10,6 +10,12 @@ export class ConcentrationChart extends Component {
     super(props);
     this.initializeChart = this.initializeChart.bind(this);
     this.update = this.updateChart.bind(this);
+    this.fetchStationData = this.fetchStationData.bind(this);
+    this.populateChart = this.populateChart.bind(this);
+    this.dataPreprocess = this.dataPreprocess.bind(this);
+    this.updateChart = this.updateChart.bind(this);
+    this.getStationName = this.getStationName.bind(this);
+
     this.chart = null;
   }
 
@@ -82,18 +88,16 @@ export class ConcentrationChart extends Component {
       ]
     };
 
+    if (stationName) {
+      options.plugins.title.text = ` NIST CO2 (${stationName})`;
+    }
+
     this.chart = new Chart(chartDOMRef, {
       type: 'line',
       data: dataset,
       options: options,
       plugins: [plugin]
     });
-
-    if (stationName) {
-      this.chart.options.plugins.title.text = ` NIST CO2 (${stationName})`;
-    } else {
-      this.chart.options.plugins.title.text = ` NIST CO2`;
-    }
   }
 
   updateChart(data, label, stationName) {
@@ -101,10 +105,9 @@ export class ConcentrationChart extends Component {
       // update that value in the chart.
       this.chart.data.labels = label;
       this.chart.data.datasets[0].data = data;
+
       if (stationName) {
         this.chart.options.plugins.title.text = ` NIST CO2 (${stationName})`;
-      } else {
-        this.chart.options.plugins.title.text = ` NIST CO2`;
       }
 
       // update the chart
