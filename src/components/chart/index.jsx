@@ -65,6 +65,9 @@ export class ConcentrationChart extends Component {
 
   updateChart = (data, label, stationName) => {
     if (this.chart) {
+      // first reset the zoom
+      this.chart.resetZoom();
+
       // update that value in the chart.
       this.chart.data.labels = label;
       this.chart.data.datasets[0].data = data;
